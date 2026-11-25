@@ -1,0 +1,5 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+POST,/ask,HTTPError('504 Server Error: Gateway Time-out for url: /ask'),537,2026-11-25T10:19:34Z,2026-11-25T10:21:15Z
+GET,/health,HTTPError('504 Server Error: Gateway Time-out for url: /health'),37,2026-11-25T10:20:25Z,2026-11-25T10:21:07Z
+POST,/ask,HTTPError('503 Server Error: Service Unavailable for url: /ask'),2,2026-11-25T10:19:19Z,2026-11-25T10:19:19Z
+POST,/ask,"ChunkedEncodingError(ProtocolError('Connection broken: IncompleteRead(0 bytes read, 410 more expected)', IncompleteRead(0 bytes read, 410 more expected)))",1,2026-11-25T10:19:38Z,2026-11-25T10:19:38Z
