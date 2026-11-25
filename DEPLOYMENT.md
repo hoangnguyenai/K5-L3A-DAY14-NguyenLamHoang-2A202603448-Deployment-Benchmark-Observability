@@ -5,7 +5,7 @@
 - Service agent Part 6 từ `06-lab-complete/`.
 - Build Dockerfile multi-stage và health check `GET /health`.
 - Redis chạy trong một dịch vụ riêng cùng project.
-- **URL public:** chờ hoàn tất đăng nhập Railway và triển khai.
+- **URL public:** [Agent trên Railway](https://k5-l3a-day14-nguyenlamhoang-2a202603448-deployme-production.up.railway.app/)
 
 ## Triển khai từ GitHub
 
@@ -29,10 +29,10 @@ Các biến dùng cho agent là `AGENT_API_KEY`, `REDIS_URL`, `ENVIRONMENT`, `RA
 
 ## Kiểm tra public URL
 
-Trong Ubuntu, thay URL mẫu bằng domain vừa tạo. Khi nhập key, terminal sẽ không hiện ký tự.
+Chạy các lệnh sau trong Ubuntu. Terminal ẩn giá trị API key khi nhập.
 
 ```bash
-BASE='https://TEN-SERVICE.up.railway.app'
+BASE='https://k5-l3a-day14-nguyenlamhoang-2a202603448-deployme-production.up.railway.app'
 read -rsp 'API key: ' AGENT_API_KEY
 echo
 curl -sS -o /dev/null -w '%{http_code}\n' "$BASE/health"
@@ -42,6 +42,15 @@ curl -sS -o /dev/null -w '%{http_code}\n' -X POST "$BASE/ask" -H 'Content-Type: 
 unset AGENT_API_KEY
 ```
 
-Kết quả mong đợi theo thứ tự là `200`, `200`, `401`, `200`. Nếu `/health` trả 200 và `/ready` trả 503, kiểm tra trạng thái Redis và biến tham chiếu `REDIS_URL` của Agent.
+| Kiểm tra trên Railway | Mã HTTP thực tế |
+| --- | ---: |
+| `GET /health` | 200 |
+| `GET /ready` | 200 |
+| `POST /ask` thiếu API key | 401 |
+| `POST /ask` có API key hợp lệ | 200 |
 
-Lưu ba ảnh vào `screenshots/`: `dashboard.png` (project có Agent và Redis), `running.png` (deployment thành công) và `test.png` (bốn mã HTTP). Điền URL public vào phần đầu file sau khi xác nhận.
+## Minh chứng
+
+- Agent và Redis đều Online. [Dashboard Railway](screenshots/dashboard.png)
+- Deployment từ GitHub ở trạng thái Active. [Deployment thành công](screenshots/running.png)
+- Terminal ghi nhận đủ bốn mã HTTP. [Kết quả kiểm tra](screenshots/test.png)
