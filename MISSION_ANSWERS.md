@@ -112,7 +112,10 @@ Agent Part 6 dùng `06-lab-complete/railway.toml` với builder `DOCKERFILE` và
 
 Render dùng Blueprint YAML để khai báo service, Docker runtime, health check và các biến môi trường. Secret có thể khai báo bằng `sync: false` hoặc `generateValue: true`. Một Blueprint có thể khai báo Redis và tham chiếu thông tin kết nối của nó thay cho cấu hình riêng trên từng dịch vụ.
 
-Deploy agent Part 6 lên Railway từ nhánh `main`. `GET /health` và `GET /ready` đều trả **200**. `POST /ask` trả **401** khi thiếu API key và **200** khi dùng key hợp lệ. [URL public](https://k5-l3a-day14-nguyenlamhoang-2a202603448-deployme-production.up.railway.app/) · [Minh chứng và lệnh kiểm tra](DEPLOYMENT.md)
+Deploy agent Part 6 lên Railway từ nhánh `main`. `GET /health` và `GET /ready` đều trả **200**. `POST /ask` trả **401** khi thiếu API key và **200** khi dùng key hợp lệ. [Minh chứng và lệnh kiểm tra](DEPLOYMENT.md)
+
+- **URL public** <https://k5-l3a-day14-nguyenlamhoang-2a202603448-deployme-production.up.railway.app/>
+- **Health check** <https://k5-l3a-day14-nguyenlamhoang-2a202603448-deployme-production.up.railway.app/health>
 
 ### Exercise 3.3 — Cloud Run
 

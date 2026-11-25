@@ -64,7 +64,9 @@ Retrieval dùng thêm token và tăng chi phí mỗi đợt eval, đồng thời
 
 Ảnh Grafana và số liệu truy vấn Prometheus được lấy trong đợt mô phỏng lỗi và request chậm. Một mẫu Prometheus ghi nhận **21,38 req/s**, p95 **1.896,5 ms**, trung bình **585,4 ms** và error rate **19,22%**. Khoảng cách giữa p95 và trung bình cho thấy một nhóm request chậm hơn đáng kể.
 
-Nginx phân phối tương đối đều qua ba instance, lần lượt **7,07**, **7,13** và **7,18 req/s**. Input token đạt **1.209,09 token/s**, cao hơn output **690,91 token/s** vì đầu vào gồm câu hỏi và ngữ cảnh truy xuất. Gọi `/metrics` qua Nginx trả **404**, còn Prometheus truy cập endpoint trực tiếp qua mạng nội bộ Docker. [Ảnh Grafana](screenshots/grafana-dashboard.png)
+Nginx phân phối tương đối đều qua ba instance, lần lượt **7,07**, **7,13** và **7,18 req/s**. Input token đạt **1.209,09 token/s**, cao hơn output **690,91 token/s** vì đầu vào gồm câu hỏi và ngữ cảnh truy xuất. Gọi `/metrics` qua Nginx trả **404**, còn Prometheus truy cập endpoint trực tiếp qua mạng nội bộ Docker.
+
+![Ảnh Grafana](screenshots/grafana-dashboard.png)
 
 ### 4.2 Thí nghiệm và cảnh báo
 
@@ -76,17 +78,23 @@ Nginx phân phối tương đối đều qua ba instance, lần lượt **7,07**
 | Pause một replica | `AgentInstanceDown` | Thấy firing khi bắt đầu quan sát. Alert đã active từ trước khi pause, nên không xác định được thời gian phát hiện riêng của thao tác này. | Instances up |
 | `AGENT_VERSION=v1` | Không ghi nhận alert mới do chất lượng | Metrics xác nhận 3 replica v1. Alert chi phí từ giai đoạn trước vẫn xuất hiện trong cửa sổ đo. | Version và Retrieval hit ratio |
 
-Ảnh Prometheus xác nhận **`AgentHighErrorRate` và `AgentHighLatencyP95` cùng firing**. `promtool test rules` báo `SUCCESS`. Để phát hiện suy giảm chất lượng khi đổi sang v1, chạy quality gate với golden dataset trước khi deploy và eval định kỳ sau deploy. [Ảnh Prometheus](screenshots/prometheus-alert-firing.png)
+Ảnh Prometheus xác nhận **`AgentHighErrorRate` và `AgentHighLatencyP95` cùng firing**. `promtool test rules` báo `SUCCESS`. Để phát hiện suy giảm chất lượng khi đổi sang v1, chạy quality gate với golden dataset trước khi deploy và eval định kỳ sau deploy.
+
+![Ảnh Prometheus](screenshots/prometheus-alert-firing.png)
 
 ### 4.3 Trace chậm và trace lỗi
 
-**Trace chậm** `ffb6cd9eb3c53b39fe90391e3ef80487` kéo dài **1.716,9 ms**. Trong các bước xử lý, `chat mock-llm-small` chiếm **1.694,3 ms** (98,7% tổng thời gian). ID khớp sự kiện `llm_call` trong log. [Ảnh trace chậm](screenshots/jaeger-slow-trace.png)
+**Trace chậm** `ffb6cd9eb3c53b39fe90391e3ef80487` kéo dài **1.716,9 ms**. Trong các bước xử lý, `chat mock-llm-small` chiếm **1.694,3 ms** (98,7% tổng thời gian). ID khớp sự kiện `llm_call` trong log.
+
+![Ảnh trace chậm](screenshots/jaeger-slow-trace.png)
 
 ```json
 {"ts":"2026-11-25T10:24:51.529573+00:00","level":"INFO","service":"observable-agent","instance":"5ee463e9c84e","event":"llm_call","trace_id":"ffb6cd9eb3c53b39fe90391e3ef80487","span_id":"76b187f96cf8da5a","request_id":"c61c40b3e784","model":"mock-llm-small","agent_version":"v2","input_tokens":70,"output_tokens":40,"cost_usd":0.000034,"llm_ms":1693.6}
 ```
 
-**Trace lỗi** `de11304507cad5d39955a2bf97adf762` kéo dài **274,2 ms**, trả HTTP **503**. Span `chat mock-llm-small` kéo dài **82,5 ms** và API Jaeger ghi event `exception` với thông báo lỗi upstream mock. ID khớp sự kiện `llm_error` trong log. [Ảnh trace lỗi](screenshots/jaeger-error-trace.png)
+**Trace lỗi** `de11304507cad5d39955a2bf97adf762` kéo dài **274,2 ms**, trả HTTP **503**. Span `chat mock-llm-small` kéo dài **82,5 ms** và API Jaeger ghi event `exception` với thông báo lỗi upstream mock. ID khớp sự kiện `llm_error` trong log.
+
+![Ảnh trace lỗi](screenshots/jaeger-error-trace.png)
 
 ```json
 {"ts":"2026-11-25T10:25:50.579204+00:00","level":"INFO","service":"observable-agent","instance":"25f4f0a52a87","event":"llm_error","trace_id":"de11304507cad5d39955a2bf97adf762","span_id":"e7d6d4fd2f0a0017","request_id":"7ee506f416e2","error":"Upstream LLM error: 503 Service Unavailable (mock)"}

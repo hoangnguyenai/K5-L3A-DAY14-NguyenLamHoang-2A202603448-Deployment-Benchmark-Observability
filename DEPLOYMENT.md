@@ -5,7 +5,8 @@
 - Service agent Part 6 từ `06-lab-complete/`.
 - Build Dockerfile multi-stage và health check `GET /health`.
 - Redis chạy trong một dịch vụ riêng cùng project.
-- **URL public:** [Agent trên Railway](https://k5-l3a-day14-nguyenlamhoang-2a202603448-deployme-production.up.railway.app/)
+- **URL public** <https://k5-l3a-day14-nguyenlamhoang-2a202603448-deployme-production.up.railway.app/>
+- **Health check** <https://k5-l3a-day14-nguyenlamhoang-2a202603448-deployme-production.up.railway.app/health>
 
 ## Triển khai từ GitHub
 
@@ -51,6 +52,20 @@ unset AGENT_API_KEY
 
 ## Minh chứng
 
-- Agent và Redis đều Online. [Dashboard Railway](screenshots/dashboard.png)
-- Deployment từ GitHub ở trạng thái Active. [Deployment thành công](screenshots/running.png)
-- Terminal ghi nhận đủ bốn mã HTTP. [Kết quả kiểm tra](screenshots/test.png)
+### Dashboard Railway
+
+Agent và Redis đều Online.
+
+![Dashboard Railway với Agent và Redis đang Online](screenshots/dashboard.png)
+
+### Deployment đang chạy
+
+Deployment từ GitHub ở trạng thái Active.
+
+![Deployment Railway ở trạng thái Active](screenshots/running.png)
+
+### Kết quả kiểm tra
+
+Terminal ghi nhận bốn mã HTTP 200, 200, 401 và 200.
+
+![Kết quả kiểm tra các endpoint Railway trong terminal](screenshots/test.png)
